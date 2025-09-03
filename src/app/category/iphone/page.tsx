@@ -25,7 +25,6 @@ const slugify = (text: string) =>
     .toLowerCase();
 
 export default function IphoneAll() {
-  
   const urlEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT;
 
   if (!urlEndpoint) {
@@ -71,17 +70,15 @@ export default function IphoneAll() {
           const productSlug = slugify(product.productName);
 
           return (
-            <Link
-              href={`/category/iphone/${productSlug}`}
-  //             href={{
-  //   pathname: `/category/iphone/${productSlug}`,
-  //   query: { productName: `${product._id}` },
-  // }}
-              key={product._id}
+            <div
+              key={product._id} // ✅ key on the outer div
               className="rounded-2xl shadow-md border bg-white overflow-hidden hover:shadow-lg transition flex flex-col relative w-[300px]"
             >
-              <div className="h-60 overflow-hidden flex items-center justify-center bg-gray-50 py-10 px-10">
-                <div className="relative w-full h-80 overflow-hidden flex items-center justify-center bg-gray-50">
+              <Link
+                href={`/category/iphone/${productSlug}`}
+                className="h-60 overflow-hidden flex items-center justify-center bg-gray-50 py-10 px-10"
+              >
+                <div className="relative w-full h-60 flex items-center justify-center bg-gray-50">
                   <Image
                     src={product.productImages?.[0] || "/placeholder.png"}
                     alt={product.productName}
@@ -90,7 +87,7 @@ export default function IphoneAll() {
                     transformation={[{ aiRemoveBackground: true }]}
                   />
                 </div>
-              </div>
+              </Link>
 
               <div className="p-4 flex flex-col flex-grow">
                 <h2 className="text-lg font-semibold line-clamp-2">
@@ -113,9 +110,14 @@ export default function IphoneAll() {
 
                 <div className="mt-4 flex items-center gap-2">
                   <button
-                    onClick={() => handleCheckout(product.productName, product.productImages?.[0] , product.price) }
+                    onClick={() =>
+                      handleCheckout(
+                        product.productName,
+                        product.productImages?.[0],
+                        product.price
+                      )
+                    }
                     className="flex-1 bg-white border border-gray-200 text-gray-900 text-center py-2 px-4 rounded-xl hover:bg-orange-500 hover:text-white active:bg-orange-700 transition-colors duration-200 font-medium"
-                  
                   >
                     Shop Now
                   </button>
@@ -128,7 +130,7 @@ export default function IphoneAll() {
                   </button>
                 </div>
               </div>
-            </Link>
+            </div>
           );
         })}
       </div>
