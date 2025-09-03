@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./checkout.css";
 import NextAuthjsProvider from "@/providers/NextAuthjsProvider";
-import { CheckoutProvider } from "@/providers/checkoutProvider";
+import { CheckoutProvider } from "@/providers/CheckoutProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

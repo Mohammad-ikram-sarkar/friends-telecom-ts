@@ -5,13 +5,15 @@ import React, { useEffect, useState } from "react";
 import { ShoppingCart } from "lucide-react";
 import { Image, ImageKitProvider } from "@imagekit/next";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import { useCheckout } from "@/providers/CheckoutProvider";
 
 interface Product {
   _id: string;
   productName: string;
   price: number;
   productImages: string[];
+  storageOptions?: string[];
 }
 
 const slugify = (text: string) =>
@@ -25,6 +27,7 @@ const slugify = (text: string) =>
     .toLowerCase();
 
 export default function IphoneAll() {
+  const router = useRouter();
   const urlEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT;
 
   if (!urlEndpoint) {
@@ -34,8 +37,16 @@ export default function IphoneAll() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const handleCheckout = (productName: string, image: string, price: number) => {
-    console.log("Checkout product:", { productName, image, price });
+  const { addItem } = useCheckout();
+
+  const handleCheckout = (product: Product) => {
+    addItem({
+      id: product._id,
+      name: product.productName,
+      price: product.price,
+      image: product.productImages?.[0],
+    });
+    router.push("/checkout");
   };
 
   useEffect(() => {
@@ -46,7 +57,7 @@ export default function IphoneAll() {
         );
         setProducts(res.data);
       } catch (error) {
-        console.log("Error fetching products:", error);
+        console.error("Error fetching products:", error);
       } finally {
         setLoading(false);
       }
@@ -71,7 +82,7 @@ export default function IphoneAll() {
 
           return (
             <div
-              key={product._id} // ✅ key on the outer div
+              key={product._id}
               className="rounded-2xl shadow-md border bg-white overflow-hidden hover:shadow-lg transition flex flex-col relative w-[300px]"
             >
               <Link
@@ -110,20 +121,21 @@ export default function IphoneAll() {
 
                 <div className="mt-4 flex items-center gap-2">
                   <button
-                    onClick={() =>
-                      handleCheckout(
-                        product.productName,
-                        product.productImages?.[0],
-                        product.price
-                      )
-                    }
+                    onClick={() => handleCheckout(product)} // ✅ fixed
                     className="flex-1 bg-white border border-gray-200 text-gray-900 text-center py-2 px-4 rounded-xl hover:bg-orange-500 hover:text-white active:bg-orange-700 transition-colors duration-200 font-medium"
                   >
                     Shop Now
                   </button>
                   <button
                     className="bg-white border border-gray-200 text-gray-700 p-2 rounded-xl hover:bg-gray-200 active:bg-gray-300 transition-colors duration-200"
-                    onClick={() => console.log("Adding to cart:", product._id)}
+                    onClick={() =>
+                      addItem({
+                        id: product._id,
+                        name: product.productName,
+                        price: product.price,
+                        image: product.productImages?.[0],
+                      })
+                    } // ✅ actually adds to cart
                     title="Add to Cart"
                   >
                     <ShoppingCart className="w-5 h-5" />

@@ -1,43 +1,68 @@
 "use client";
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
-// Type for cart items
-type CartItem = {
-  id: number;
+export type CartItem = {
+  id: string;
   name: string;
   price: number;
-};
-
-// Checkout state type
-type CheckoutState = {
-  name?: string;
+  quantity?: number;
   image?: string;
-  items?: CartItem[];
-
 };
 
-// Context type
+type CheckoutState = {
+  items: CartItem[];
+};
+
 type CheckoutContextType = {
   checkoutState: CheckoutState;
   setCheckoutState: React.Dispatch<React.SetStateAction<CheckoutState>>;
+  addItem: (item: CartItem) => void;
+  removeItem: (id: string) => void;
+  clearCheckout: () => void;
 };
 
-// Create context
 const CheckoutContext = createContext<CheckoutContextType | undefined>(undefined);
 
-// Provider component
 export function CheckoutProvider({ children }: { children: ReactNode }) {
   const [checkoutState, setCheckoutState] = useState<CheckoutState>({ items: [] });
-  console.log("Checkout State:", checkoutState);
+
+  // ✅ Add item (merge if exists, else add new)
+    const addItem = (item: CartItem) => {
+    setCheckoutState((prev) => {
+      const existing = prev.items.find((i) => i.id === item.id);
+      if (existing) {
+        return {
+          items: prev.items.map((i) =>
+            i.id === item.id ? { ...i, quantity: (i.quantity || 1) + (item.quantity || 1) } : i
+          ),
+        };
+      }
+      return { items: [...prev.items, { ...item, quantity: item.quantity || 1 }] };
+    });
+  };
+
+  // ✅ Remove item
+  const removeItem = (id: string) => {
+    setCheckoutState((prev) => ({
+      items: prev.items.filter((i) => i.id !== id),
+    }));
+  };
+// inside CheckoutProvider
+React.useEffect(() => {
+  console.log("Checkout state updated:", checkoutState);
+}, [checkoutState]);
+
+  const clearCheckout = () => {
+    setCheckoutState({ items: [] });
+  };
 
   return (
-    <CheckoutContext.Provider value={{ checkoutState, setCheckoutState }}>
+    <CheckoutContext.Provider value={{ checkoutState, setCheckoutState, addItem, removeItem, clearCheckout }}>
       {children}
     </CheckoutContext.Provider>
   );
 }
 
-// Custom hook
 export function useCheckout() {
   const context = useContext(CheckoutContext);
   if (!context) throw new Error("useCheckout must be used inside CheckoutProvider");
