@@ -8,12 +8,9 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import logo from './../../../public/WhatsApp_Image_2025-08-23_at_19.59.58__1_-removebg-preview (1).png'
-import { useSession } from 'next-auth/react';
 
 const AppleNavbar = () => {
   const router = useRouter();
-  const session = useSession();
-  console.log(session);
   console.log()
   const searchParams = useSearchParams();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -72,7 +69,7 @@ const AppleNavbar = () => {
           {/* Logo - Apple-inspired design */}
           <div className="flex-shrink-0 lg:mr-8">
             <Link href="/" className="flex items-center">
-             <Image src={logo}  className='w-35 h-35'/>
+<Image src={logo} alt="Logo" className="w-35 h-35" />
               {/* <h1 className="text-xl sm:text-2xl font-bold text-gray-900 hover:text-gray-700 transition-colors">
                 AppleHub
               </h1> */}

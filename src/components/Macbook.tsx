@@ -1,5 +1,5 @@
 import React from 'react';
-import macbook from '@/../public/macbookairM3_hero_small_2x.png'
+import macbook from '@/../public/WhatsApp_Image_2025-08-23_at_19.59.58__1_-removebg-preview (1).png'
 import Image from 'next/image';
 
 const Macbook = () => {

@@ -11,6 +11,7 @@ import {
   FileText, 
   Mail, 
   Calendar,
+  PlusSquare,   // ✅ added for Add Product
 } from 'lucide-react';
 
 const NavSidebar = () => {
@@ -23,8 +24,7 @@ const NavSidebar = () => {
     { name: 'Analytics', icon: BarChart3, href: '/analytics' },
     { name: 'Reports', icon: FileText, href: '/reports' },
     { name: 'Messages', icon: Mail, href: '/messages' },
-    { name: 'Calendar', icon: Calendar, href: '/calendar' },
-    { name: 'Settings', icon: Settings, href: '/settings' },
+    { name: 'Add Product', icon: PlusSquare, href: '/deshboard/addproduct' }, // ✅ new nav item
   ];
 
   const isActive = (href: string) => pathname === href;
