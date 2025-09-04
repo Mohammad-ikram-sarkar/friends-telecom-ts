@@ -1,70 +1,64 @@
 "use client";
+
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
+// ✅ Type for items in the cart
 export type CartItem = {
   id: string;
   name: string;
-  price: number;
-  quantity?: number;
+  price: number;   // better as number instead of string for calculations
   image?: string;
+  quantity: number; // 🔥 added this
 };
 
-type CheckoutState = {
-  items: CartItem[];
+// ✅ Type for the context value
+type CartContextType = {
+  cart: CartItem[];
+  addToCart: (item: CartItem) => void;
+  removeFromCart: (id: string) => void;
+  clearCart: () => void;
 };
 
-type CheckoutContextType = {
-  checkoutState: CheckoutState;
-  setCheckoutState: React.Dispatch<React.SetStateAction<CheckoutState>>;
-  addItem: (item: CartItem) => void;
-  removeItem: (id: string) => void;
-  clearCheckout: () => void;
-};
+// ✅ Create context
+const CartContext = createContext<CartContextType | null>(null);
 
-const CheckoutContext = createContext<CheckoutContextType | undefined>(undefined);
+// ✅ Provider component
+export const CheckoutProvider = ({ children }: { children: ReactNode }) => {
+  const [cart, setCart] = useState<CartItem[]>([]);
 
-export function CheckoutProvider({ children }: { children: ReactNode }) {
-  const [checkoutState, setCheckoutState] = useState<CheckoutState>({ items: [] });
-
-  // ✅ Add item (merge if exists, else add new)
-    const addItem = (item: CartItem) => {
-    setCheckoutState((prev) => {
-      const existing = prev.items.find((i) => i.id === item.id);
+  // Add item (or increase quantity if already exists)
+  const addToCart = (item: CartItem) => {
+    setCart((prev) => {
+      const existing = prev.find((i) => i.id === item.id);
       if (existing) {
-        return {
-          items: prev.items.map((i) =>
-            i.id === item.id ? { ...i, quantity: (i.quantity || 1) + (item.quantity || 1) } : i
-          ),
-        };
+        return prev.map((i) =>
+          i.id === item.id
+            ? { ...i, quantity: i.quantity + item.quantity }
+            : i
+        );
       }
-      return { items: [...prev.items, { ...item, quantity: item.quantity || 1 }] };
+      return [...prev, item];
     });
   };
 
-  // ✅ Remove item
-  const removeItem = (id: string) => {
-    setCheckoutState((prev) => ({
-      items: prev.items.filter((i) => i.id !== id),
-    }));
+  // Remove item by id
+  const removeFromCart = (id: string) => {
+    setCart((prev) => prev.filter((item) => item.id !== id));
   };
-// inside CheckoutProvider
-React.useEffect(() => {
-  console.log("Checkout state updated:", checkoutState);
-}, [checkoutState]);
 
-  const clearCheckout = () => {
-    setCheckoutState({ items: [] });
-  };
+  // Clear cart
+  const clearCart = () => setCart([]);
 
   return (
-    <CheckoutContext.Provider value={{ checkoutState, setCheckoutState, addItem, removeItem, clearCheckout }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
       {children}
-    </CheckoutContext.Provider>
+    </CartContext.Provider>
   );
-}
+};
 
-export function useCheckout() {
-  const context = useContext(CheckoutContext);
-  if (!context) throw new Error("useCheckout must be used inside CheckoutProvider");
+// ✅ Custom hook to use cart context
+export const useCart = () => {
+  const context = useContext(CartContext);
+  if (!context) throw new Error("useCart must be used inside CartProvider");
   return context;
-}
+};

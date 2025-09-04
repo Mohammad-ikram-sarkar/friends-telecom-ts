@@ -33,7 +33,6 @@ export default function deshboardLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <CheckoutProvider>
                 <ResponsiveEcomerce></ResponsiveEcomerce>
 
             <div className="flex  w-screen">
@@ -41,7 +40,6 @@ export default function deshboardLayout({
 
             
             </div>
-       </CheckoutProvider>
 
 
       
