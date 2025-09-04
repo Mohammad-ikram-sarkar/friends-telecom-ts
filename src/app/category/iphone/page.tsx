@@ -6,12 +6,11 @@ import { ShoppingCart } from "lucide-react";
 import { Image, ImageKitProvider } from "@imagekit/next";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCheckout } from "@/providers/CheckoutProvider";
 
 interface Product {
   _id: string;
   productName: string;
-  price: number;
+  price: string;
   productImages: string[];
   storageOptions?: string[];
 }
@@ -27,6 +26,7 @@ const slugify = (text: string) =>
     .toLowerCase();
 
 export default function IphoneAll() {
+
   const router = useRouter();
   const urlEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT;
 
@@ -37,16 +37,10 @@ export default function IphoneAll() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const { addItem } = useCheckout();
 
   const handleCheckout = (product: Product) => {
-    addItem({
-      id: product._id,
-      name: product.productName,
-      price: product.price,
-      image: product.productImages?.[0],
-    });
-    router.push("/checkout");
+   
+  router.push(`/checkout?productId=${product._id}`);
   };
 
   useEffect(() => {

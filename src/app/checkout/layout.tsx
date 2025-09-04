@@ -30,10 +30,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <NextAuthjsProvider>
-          <CheckoutProvider>
               {children}
 
-          </CheckoutProvider>
 
           
 
