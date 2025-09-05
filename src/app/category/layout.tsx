@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import ResponsiveEcomerce from "../components/ResponsiveEcomerce";
 import './category.css';
 import { CheckoutProvider } from "@/providers/CheckoutProvider";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,13 +34,18 @@ export default function deshboardLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-                <ResponsiveEcomerce></ResponsiveEcomerce>
+
+        <Suspense>
+               <ResponsiveEcomerce></ResponsiveEcomerce>
 
             <div className="flex  w-screen">
                  {children}
 
             
             </div>
+
+        </Suspense>
+           
 
 
       

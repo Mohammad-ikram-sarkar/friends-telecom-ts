@@ -4,9 +4,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ChevronLeft, ChevronRight, Star, Truck, Shield, CreditCard } from "lucide-react";
 import { Image, ImageKitProvider } from "@imagekit/next";
+interface PageProps {
+  params: {
+    productName: string;
+  };
+}
 
-export default function Page({ params }: { params: { productName: string } }) {
-  const { productName } = params; // use params directly
+export default function Page({ params }: PageProps) {
+  const { productName } = React.use(params); // use params directly
   const urlEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT;
 
   if (!urlEndpoint) {

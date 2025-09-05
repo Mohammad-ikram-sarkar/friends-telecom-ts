@@ -1,15 +1,16 @@
-import React from 'react';
 import Banner from '@/components/Banner';
 import Macbook from '@/components/Macbook';
 import AppleProduct from '@/components/AppleProduct';
 const page = () => {
   return (
     <div>
-      <Banner />
+       <Banner />
       <Macbook></Macbook>
       <AppleProduct></AppleProduct>
-      
+
     </div>
+     
+      
   );
 };
 

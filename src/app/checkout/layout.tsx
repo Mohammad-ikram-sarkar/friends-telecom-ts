@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./checkout.css";
 import NextAuthjsProvider from "@/providers/NextAuthjsProvider";
-import { CheckoutProvider } from "@/providers/CheckoutProvider";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +30,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <NextAuthjsProvider>
+          <Suspense fallback={<div>Loading checkout...</div>}>
               {children}
+
+          </Suspense>
 
 
           
